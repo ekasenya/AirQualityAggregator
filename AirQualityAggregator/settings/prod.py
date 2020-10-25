@@ -1,6 +1,6 @@
 from django.core.exceptions import ImproperlyConfigured
 
-from Hasker.settings.base import *
+from AirQualityAggregator.settings.base import *
 
 
 def get_env_value(env_variable):
@@ -18,7 +18,7 @@ SECRET_KEY = get_env_value("SECRET_KEY")
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'haskerdb',
+        'NAME': 'air_aggr_db',
         'USER': 'django',
         'PASSWORD': 'django',
         'HOST': 'db',

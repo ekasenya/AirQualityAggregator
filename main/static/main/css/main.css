@@ -1,3 +1,11 @@
-.primary-color {
-    color: #118CA5;
+.service-card-header{background-color:#98CCD7!important}
+
+.value-card-header {
+    font-size:18px;
+    color:#8D9091
+}
+
+.value {
+    font-size:24px;
+    font-weight: bold;
 }
