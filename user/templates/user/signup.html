@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_content %}
+  <h2>Sign up</h2>
+
+  <form class="form" enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="form-group row">
+      <label for="username" class="col-sm-2 col-form-label">Login</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" id="username" name="username" value="{{ form.username.value|default_if_none:'' }}">
+        <p style="color: red">{{ form.username.errors.as_text }}</p>
+      </div>
+      <div class="col-sm-5">
+        <small style="color: grey">{{ form.username.help_text }}</small>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="email" class="col-sm-2 col-form-label">Email</label>
+      <div class="col-sm-4">
+        <input type="email" class="form-control" id="email" name="email" value="{{ form.email.value|default_if_none:'' }}" placeholder="Email">
+        <p style="color: red">{{ form.username.errors.as_text }}</p>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="password1" class="col-sm-2 col-form-label">Password</label>
+      <div class="col-sm-4">
+        <input type="password" class="form-control" id="password1" name="password1" placeholder="Password">
+        <p style="color: red">{{ form.password1.errors.as_text }}</p>
+        <small style="color: grey">{{ form.password1.help_text }}</small>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="password1" class="col-sm-2 col-form-label">Repeat password</label>
+      <div class="col-sm-4">
+        <input type="password" class="form-control" id="password2" name="password2" placeholder="Password">
+        <p style="color: red">{{ form.password2.errors.as_text }}</p>
+      </div>
+      <div class="col-sm-5">
+        <small style="color: grey">{{ form.password2.help_text }}</small>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="avatar" class="col-sm-2 col-form-label">Avatar</label>
+        <div class="col-sm-4">
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" id="avatar" name="avatar" accept="image/*">
+              <label class="custom-file-label" for="avatar" id="file_name" data-browse="Upload">{{ file_name|default_if_none:'Select file...' }}</label>
+              <p style="color: red">{{ form.avatar.errors.as_text }}</p>
+            </div>
+        </div>
+
+        <div class="col-sm-5">
+          <small style="color: grey">{{ form.avatar.help_text }}</small>
+        </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-4">
+          <button type="submit" class="btn btn-primary">Sign up</button>
+          <input type="hidden" name="next" value="{{ next }}">
+      </div>
+    </div>
+  </form>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+<script src='{% static "/user/js/jquery-1.8.0.min.js" %}'></script>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function () {
+  document.querySelector("#avatar").onchange = function(){
+    document.querySelector("#file_name").innerHTML = this.files[0].name;
+  }
+});
+</script>
+{% endblock %}
+
