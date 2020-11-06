@@ -3,7 +3,7 @@ from http import HTTPStatus
 from bs4 import BeautifulSoup
 import ssl
 
-from services.CustomAirQualityService import CustomAirQualityService
+from services.custom_service import CustomAirQualityService
 
 
 class MosEcoService(CustomAirQualityService):

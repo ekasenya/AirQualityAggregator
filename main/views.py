@@ -1,8 +1,8 @@
 from django.views.generic import TemplateView
 
-from services.MosEcoService import MosEcoService
-from services.AirCmsService import AirCmsService
-from services.CustomAirQualityService import SUBSTANCE_DICT
+from services.mos_eco_service import MosEcoService
+from services.air_cms_service import AirCmsService
+from services.custom_service import SUBSTANCE_DICT
 
 
 class IndexView(TemplateView):

@@ -1,6 +1,6 @@
 from django import template
 
-from services.CustomAirQualityService import  SUBSTANCE_DICT
+from services.custom_service import  SUBSTANCE_DICT
 
 register = template.Library()
 

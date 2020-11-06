@@ -12,9 +12,17 @@
 
 <h2>Average data in the city</h2>
 
-<div class="card mb-3">
-    {% include "main/service_summary_data.html" with service_name="MosEcoMonitoring" list=mos_eco %}
-    {% include "main/service_summary_data.html" with service_name="AirCms" list=air_cms %}
+
+<div class="container" style="margin:10px">
+    <div class="row">
+        <div class="col-sm">
+           {% include "main/service_summary_data.html" with service_name="MosEcoMonitoring" list=mos_eco %}
+        </div>
+        <div class="col-sm">
+          {% include "main/service_summary_data.html" with service_name="AirCms" list=air_cms %}
+        </div>
+    </div>
 </div>
+
 
 {% endblock %}

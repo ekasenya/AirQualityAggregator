@@ -3,7 +3,7 @@ import http.client
 from http import HTTPStatus
 import ssl
 
-from services.CustomAirQualityService import CustomAirQualityService
+from services.custom_service import CustomAirQualityService
 
 
 class AirCmsService(CustomAirQualityService):
@@ -69,6 +69,8 @@ class AirCmsService(CustomAirQualityService):
 
             if (self.MIN_LAT <= lat <= self.MAX_LAT) and (self.MIN_LON <= lon <= self.MAX_LON):
                 self.devices[item['id']] = item['address']
+
+        return self.devices
 
     def get_station_data(self, station_id):
         pass

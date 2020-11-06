@@ -1,23 +1,105 @@
-{% extends "base.html" %}
+{% extends "user/custom_settings.html" %}
+{% load static %}
 
 {% block page_content %}
 
+{{ block.super }}
+<br>
 <div class="row">
-  <div class="col-4">
-    <div class="list-group" id="list-tab" role="tablist">
-      <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home</a>
-      <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Profile</a>
-      <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Messages</a>
-      <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
+  <div class="col-3">
+    <div class="list-group-flush" id="list-tab" role="tablist">
+      {% if service_list %}
+      {% for item in service_list %}
+        <a class="list-group-item list-group-item-action {%if service_id == item.id %} active {% endif %}" id="{{ item.id }}" href="?service_id={{item.id}}&next={{next}}" role="tab">{{ item.name }}</a>
+      {% endfor %}
+      {% else %}
+      No services
+      {% endif %}
     </div>
   </div>
-  <div class="col-8">
-    <div class="tab-content" id="nav-tabContent">
-      <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">...</div>
-      <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">...</div>
-      <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>
-      <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">...</div>
+  <div class="col-9">
+    <div class="row" style="margin-bottom:10px;" >
+       <div class="col-5">
+        <form class="inline-form" action="" method="get">
+            <div class="input-group">
+                <input class="form-control" name="q" type="search" placeholder="Search" aria-label="Search" value="{{ q }}">
+              <div class="input-group-append">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+              </div>
+            </div>
+        </form>
+       </div>
+        <div class="col-7">
+          <div class="text-right">
+              <div class="btn-group" role="group" align="right">
+                  <a class="{% if my_stations != 1 %}btn btn-secondary{% else %}btn btn-outline-secondary{% endif %}" href="{% url 'index' %}?ordering=0" >All stations</a>
+                  <a class="{% if my_stations == 1 %}btn btn-secondary{% else %}btn btn-outline-secondary{% endif %}" href="{% url 'index'%}?ordering=1">My stations</a>
+              </div>
+          </div>
+        </div>
     </div>
+
+      <ul class="list-group list-group-flush">
+    {% for station in station_list %}
+          {% if forloop.counter0|divisibleby:"2" %}
+          <li class="list-group-item">
+              <div class="row">
+                <div class="col-md-5">
+                    <row class="row">
+                        <div class="col-md-1 vote-sum" align="right">
+                            <div class="{% if user.id == question.user.id %} user-station {% else %} empty-station {% endif %}" id="station-{{ station.id }}" name="{{ station.id }}" >{% if answer.is_correct == 1 %}&#9733;{% else %}&#9734;{% endif %}</div>
+                        </div>
+                        <div class="col-md-10">
+                            {{ station.name }}
+                        </div>
+                    </row>
+                </div>
+                  {% else %}
+                <div class="col-md-5">
+                    <row class="row">
+                        <div class="col-md-1 vote-sum" align="right">
+                            <div class="{% if user.id == question.user.id %} user-station {% else %} empty-station {% endif %}" id="station-{{ station.id }}" name="{{ station.id }}" >{% if answer.is_correct == 1 %}&#9733;{% else %}&#9734;{% endif %}</div>
+                        </div>
+                        <div class="col-md-10">
+                            {{ station.name }}
+                        </div>
+                    </row>
+                </div>
+              </div>
+          </li>
+          {% endif %}
+    {% endfor %}
+      </ul>
+
+    {% if station_list %}
+    <nav aria-label="...">
+      <ul class="pagination">
+          {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&next={{next}}&service_id={{service_id}}" tabindex="-1">Prev</a>
+            </li>
+          {% endif %}
+
+          {% for i in paginator.page_range %}
+              {% if page_obj.number == i %}
+                <li class="page-item active">
+                    <a class="page-link" href="?page={{i}}&next={{next}}&service_id={{service_id}}">{{ i }} <span class="sr-only">(current)</span></a>
+                </li>
+              {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{i}}&next={{next}}&service_id={{service_id}}">{{i}}</a></li>
+              {% endif %}
+
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&next={{next}}&service_id={{service_id}}">Next</a>
+            </li>
+          {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+
   </div>
 </div>
 

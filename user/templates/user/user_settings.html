@@ -1,11 +1,13 @@
-{% extends "base.html" %}
+{% extends "user/custom_settings.html" %}
 {% load static %}
 
 {% block page_content %}
+{{ block.super }}
+
 <div class="container-fluid">
     <div class="row" >
         <div class="col-sm-10 ">
-<h1>Setting</h1>
+<h1>Settings</h1>
 <form  method="post" enctype="multipart/form-data">
     {% csrf_token %}
   <div class="form-group row">
@@ -52,21 +54,23 @@
 {% endblock %}
 
 {% block js %}
-<script  type="text/javascript">
-$(document).ready(function () {
-    $("#avatar").change(function() {
+    {{ block.super }}
 
-        var preview = document.getElementById('img-preview');
+    <script  type="text/javascript">
+    $(document).ready(function () {
+        $("#avatar").change(function() {
 
-        if (event.target.files.length > 0) {
-            preview.src = URL.createObjectURL(event.target.files[0]);
-            preview.onload = function() {
-              URL.revokeObjectURL(preview.src)
+            var preview = document.getElementById('img-preview');
+
+            if (event.target.files.length > 0) {
+                preview.src = URL.createObjectURL(event.target.files[0]);
+                preview.onload = function() {
+                  URL.revokeObjectURL(preview.src)
+                }
+                document.getElementById('file_name').innerHTML = event.target.files[0].name
             }
-            document.getElementById('file_name').innerHTML = event.target.files[0].name
-        }
 
+        });
     });
-});
-</script>
+    </script>
 {% endblock %}

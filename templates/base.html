@@ -7,11 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         .content {
-            margin: 10px; /* Убираем отступы */
+            margin: 10px;
         }
 
         .title {
-            padding: 10px; /* Поля вокруг текста */
+            padding: 10px;
         }
 
     </style>
@@ -27,7 +27,16 @@
             </a>
         </div>
 
-
+        <div align="right">
+            {% if user.is_authenticated %}
+                <img src='{% if user.avatar %}{{ user.avatar.url }} {% else %} {% static user_default_avatar %} {% endif %}' width="25" height="25">
+                <a class="btn btn-link" href="{% url 'settings' user.id %}?next={{request.path}}">{{ user.username }}</a>
+                <a class="btn btn-outline-primary" href="{% url 'logout'%}?next={{request.path}}">Log out</a>
+            {% else %}
+                <a class="btn btn-link" href="{% url 'login'%}?next={{request.path}}">Log In</a>
+                <a class="btn btn-outline-primary" href="{% url 'signup'%}?next={{request.path}}">Sign Up</a>
+            {% endif %}
+        </div>
     </nav>
 
     {% block page_content %} page content {% endblock %}

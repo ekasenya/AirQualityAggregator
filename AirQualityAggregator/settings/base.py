@@ -43,6 +43,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
+                'user.context_processors.user_settings',
             ],
 
             'libraries': {
@@ -71,6 +72,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'user.UserProfile'
 
 LANGUAGE_CODE = 'en-us'
 
@@ -91,3 +93,6 @@ STATICFILES_DIRS = (
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+
+STATIONS_PER_PAGE = 30

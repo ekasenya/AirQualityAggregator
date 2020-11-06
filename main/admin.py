@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from main.models import AirQService, Station, UserStations
+
+admin.site.register(AirQService)
+admin.site.register(Station)
+admin.site.register(UserStations)
