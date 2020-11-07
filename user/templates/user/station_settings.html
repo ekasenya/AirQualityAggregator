@@ -1,6 +1,11 @@
 {% extends "user/custom_settings.html" %}
 {% load static %}
 
+{% block links %}
+{{ block.super }}
+<link href='{% static "user/css/user.css" %}' rel="stylesheet" type="text/css">
+{% endblock %}
+
 {% block page_content %}
 
 {{ block.super }}
@@ -20,7 +25,7 @@
   <div class="col-9">
     <div class="row" style="margin-bottom:10px;" >
        <div class="col-5">
-        <form class="inline-form" action="" method="get">
+        <form class="inline-form" action="{% url 'station-settings' service_id %}?next={{next}}&service_id={{service_id}}&my_stations={{ my_stations }}" method="get">
             <div class="input-group">
                 <input class="form-control" name="q" type="search" placeholder="Search" aria-label="Search" value="{{ q }}">
               <div class="input-group-append">
@@ -32,8 +37,8 @@
         <div class="col-7">
           <div class="text-right">
               <div class="btn-group" role="group" align="right">
-                  <a class="{% if my_stations != 1 %}btn btn-secondary{% else %}btn btn-outline-secondary{% endif %}" href="{% url 'index' %}?ordering=0" >All stations</a>
-                  <a class="{% if my_stations == 1 %}btn btn-secondary{% else %}btn btn-outline-secondary{% endif %}" href="{% url 'index'%}?ordering=1">My stations</a>
+                  <a class="{% if my_stations != '1' %}btn btn-secondary{% else %}btn btn-outline-secondary{% endif %}" href="?next={{next}}" >All stations</a>
+                  <a class="{% if my_stations == '1' %}btn btn-secondary{% else %}btn btn-outline-secondary{% endif %}" href="?next={{next}}&my_stations=1">My stations</a>
               </div>
           </div>
         </div>
@@ -47,22 +52,25 @@
                 <div class="col-md-5">
                     <row class="row">
                         <div class="col-md-1 vote-sum" align="right">
-                            <div class="{% if user.id == question.user.id %} user-station {% else %} empty-station {% endif %}" id="station-{{ station.id }}" name="{{ station.id }}" >{% if answer.is_correct == 1 %}&#9733;{% else %}&#9734;{% endif %}</div>
+
+                            <div class="{% if station.is_user_station == 1 %}user-station{% else %} empty-station{% endif %}" id="station-{{ station.id }}" name="{{ station.id }}" >{% if station.is_user_station == 1 %}&#9733;{% else %}&#9734;{% endif %}</div>
                         </div>
                         <div class="col-md-10">
-                            {{ station.name }}
+                           {{ station.name }}
                         </div>
+
                     </row>
                 </div>
                   {% else %}
                 <div class="col-md-5">
                     <row class="row">
                         <div class="col-md-1 vote-sum" align="right">
-                            <div class="{% if user.id == question.user.id %} user-station {% else %} empty-station {% endif %}" id="station-{{ station.id }}" name="{{ station.id }}" >{% if answer.is_correct == 1 %}&#9733;{% else %}&#9734;{% endif %}</div>
+                            <div class="{% if station.is_user_station == 1 %}user-station{% else %} empty-station{% endif %}" id="station-{{ station.id }}" name="{{ station.id }}" >{% if station.is_user_station == 1 %}&#9733;{% else %}&#9734;{% endif %}</div>
                         </div>
                         <div class="col-md-10">
                             {{ station.name }}
                         </div>
+
                     </row>
                 </div>
               </div>
@@ -76,24 +84,24 @@
       <ul class="pagination">
           {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&next={{next}}&service_id={{service_id}}" tabindex="-1">Prev</a>
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&next={{next}}&service_id={{service_id}}&my_stations={{ my_stations }}" tabindex="-1">Prev</a>
             </li>
           {% endif %}
 
           {% for i in paginator.page_range %}
               {% if page_obj.number == i %}
                 <li class="page-item active">
-                    <a class="page-link" href="?page={{i}}&next={{next}}&service_id={{service_id}}">{{ i }} <span class="sr-only">(current)</span></a>
+                    <a class="page-link" href="?page={{i}}&next={{next}}&service_id={{service_id}}&my_stations={{ my_stations }}">{{ i }} <span class="sr-only">(current)</span></a>
                 </li>
               {% else %}
-                <li class="page-item"><a class="page-link" href="?page={{i}}&next={{next}}&service_id={{service_id}}">{{i}}</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{i}}&next={{next}}&service_id={{service_id}}&my_stations={{ my_stations }}">{{i}}</a></li>
               {% endif %}
 
           {% endfor %}
 
           {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}&next={{next}}&service_id={{service_id}}">Next</a>
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&next={{next}}&service_id={{service_id}}&my_stations={{ my_stations }}">Next</a>
             </li>
           {% endif %}
       </ul>
@@ -103,4 +111,50 @@
   </div>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+    <script src='{% static "user/js/jquery-ui.min.js" type="text/javascript" %}' charset="utf-8"></script>
+    <script src='{% static "user/js/jquery.min.js" %}'></script>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function () {
+
+  var divs = document.getElementsByTagName("div");
+  for (i = 0 ; i < divs.length ; i++) {
+    itemName = divs[i].getAttribute("id")
+
+    if ( (itemName != null) && (itemName.indexOf("station-") == 0) ) {
+        $("#" + divs[i].getAttribute("id")).click(function() {
+            onClickSelectStation(document.getElementById(this.id).getAttribute("name"));
+        });
+    }
+  }
+
+function onClickSelectStation(id) {
+
+   $.ajax({
+        url: '{% url 'select_station' %}',
+        type: 'POST',
+        data:{station_id: id, user_id: {{ user.id }}, csrfmiddlewaretoken: '{{ csrf_token }}'},
+        success: function(response) {
+            if (response == 1) {
+                document.getElementById("station-" + id).innerHTML = '&#9733;';
+                document.getElementById("station-" + id).classList.remove('empty-station');
+                document.getElementById("station-" + id).classList.add('user-station');
+            } else if (response == 0) {
+                document.getElementById("station-" + id).innerHTML = '&#9734;';
+                document.getElementById("station-" + id).classList.remove('user-station');
+                document.getElementById("station-" + id).classList.add('empty-station');
+            }
+        },
+    });
+}
+
+
+});
+</script>
 {% endblock %}

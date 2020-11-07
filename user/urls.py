@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^signup$', views.SignUpView.as_view(), name='signup'),
     url(r'^settings/(?P<pk>[0-9]+)/$', views.SettingsView.as_view(), name='settings'),
     url(r'^station-settings/(?P<pk>[0-9]+)/$', views.StationSettingsView.as_view(), name='station-settings'),
+    url(r'^ajax/station-settings/select/$', views.select_station, name='select_station'),
 ]
