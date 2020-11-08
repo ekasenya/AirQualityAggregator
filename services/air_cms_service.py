@@ -2,8 +2,10 @@ import json
 import http.client
 from http import HTTPStatus
 import ssl
+import logging
 
 from services.custom_service import CustomAirQualityService
+from main.models import Station
 
 
 class AirCmsService(CustomAirQualityService):
@@ -13,7 +15,7 @@ class AirCmsService(CustomAirQualityService):
     SCHEME = "https://"
     URL = "aircms.online"
     STATIONS_URN = "/php/guiapi.php?devices"
-    AVERAGE_URN = "/php/guiapi.php?T=0"
+    DATA_URN = "/php/guiapi.php?T=0"
 
     MIN_LAT = 55.5
     MAX_LAT = 56
@@ -74,3 +76,38 @@ class AirCmsService(CustomAirQualityService):
 
     def get_station_data(self, station_id):
         pass
+
+    def get_all_stations_data(self):
+        service_id = self.get_service_id()
+
+        if service_id <= 0:
+            return
+
+        # data from all stations
+
+        station_data = {}
+        response_data = self.request_average_data()
+
+        if not response_data:
+            return
+
+        self.get_stations()
+        data = json.loads(response_data)['data']
+
+        for item in data:
+            if item['device_id'] in self.devices:
+                station = Station.objects.filter(station_id=item['device_id']).first()
+
+                if not station:
+                    self.log_error('Station {} not found'.format(item['device_id']))
+                    continue
+                try:
+                    station_data[station.id] = {
+                        self.SUBSTANCE_MATCHING_DICT['sds_p1']: float(item['sds_p1']),
+                        self.SUBSTANCE_MATCHING_DICT['sds_p2']: float(item['sds_p2']),
+                    }
+                except Exception as ex:
+                    self.log_error('Station {} error {}'.format(item['device_id'], ex))
+
+        return station_data
+

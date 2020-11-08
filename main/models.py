@@ -25,3 +25,18 @@ class Station(models.Model):
 class UserStations(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     station = models.ForeignKey(Station, on_delete=models.CASCADE)
+
+
+class Substance(models.Model):
+    shortname = models.CharField(max_length=8)
+    name_ru = models.CharField(max_length=128)
+    name_en = models.CharField(max_length=128)
+    limit_value = models.FloatField()
+
+
+class Measuring(models.Model):
+    service = models.ForeignKey(AirQService, on_delete=models.CASCADE)
+    station = models.ForeignKey(Station, on_delete=models.CASCADE)
+    substance = models.ForeignKey(Substance, on_delete=models.CASCADE)
+    value = models.FloatField(null=True)
+    createdate = models.DateTimeField()

@@ -4,13 +4,14 @@ from bs4 import BeautifulSoup
 import ssl
 
 from services.custom_service import CustomAirQualityService
+from main.models import Station, AirQService
 
 
 class MosEcoService(CustomAirQualityService):
     SCHEME = "https://"
     URL = "mosecom.mos.ru"
     STATIONS_URN = "/stations/"
-    AVERAGE_URN = "/vozdux/"
+    DATA_URN = "/vozdux/"
     SERVICE_NAME = "MosEcoMonitoring"
 
     def parse_average_data(self, response_data):
@@ -25,38 +26,6 @@ class MosEcoService(CustomAirQualityService):
             count = item.find("span", class_="this-count")
             result[type.contents[0].strip()] = count.contents[0].strip() if count else None
         return result
-
-    def get_stations(self):
-        response_data = self.request_station_list()
-
-        if not response_data:
-            return
-
-        station_list = self.parse_station_list(response_data)
-
-        return station_list
-
-    def request_station_list(self):
-        context = ssl._create_unverified_context()
-
-        for attempt in range(self.MAX_CONNECT_ATTEMPTS):
-            try:
-                conn = http.client.HTTPSConnection(self.URL, context=context)
-                try:
-                    conn.request("GET", self.STATIONS_URN)
-                    response = conn.getresponse()
-
-                    if response.status == HTTPStatus.OK:
-                        return response.read()
-
-                    self.log_error('Attempt #{} to get station list failed.'.format(attempt + 1))
-                finally:
-                    conn.close()
-            except Exception as ex:
-                self.log_error('Attempt #{} to get station list failed. Exception: {}'
-                               .format(attempt + 1, ex))
-        self.log_error('Can not get station list')
-        return
 
     def parse_station_list(self, response_data):
         result = {}
@@ -84,7 +53,7 @@ class MosEcoService(CustomAirQualityService):
         if not html:
             return
 
-        return self.parse_station_data_html(html)
+        return self.parse_station_data(html)
 
     def request_station_data(self, station_id):
         context = ssl._create_unverified_context()
@@ -109,10 +78,44 @@ class MosEcoService(CustomAirQualityService):
         self.log_error('Can not get station {} data'.format(station_id))
         return
 
-    def parse_station_data_html(self, html):
+    def parse_station_data(self, response_data):
         result = {}
 
-        parser = BeautifulSoup(markup=html.decode("utf-8"), features='html.parser')
+        parser = BeautifulSoup(markup=response_data.decode("utf-8"), features='html.parser')
+        for item in parser.find_all("div", class_="m-flip__content"):
+            type = item.find("div", class_="text-norma")
+            if not type:
+                continue
+
+            count = item.find("span", class_="this-count")
+
+            result[type.contents[0].strip()] = count.contents[0].strip() if count else None
+        return result
+
+    def get_all_stations_data(self):
+        service_id = self.get_service_id()
+
+        if service_id <= 0:
+            return
+
+        station_list = Station.objects.filter(service_id=service_id)
+
+        station_data = {}
+        for station in station_list:
+            response_data = self.request_station_data(station.station_id)
+            if not response_data:
+                continue
+
+            substance_dict = self.parse_station_data(response_data)
+            if substance_dict:
+                station_data[station.id] = substance_dict
+
+        return station_data
+
+    def parse_all_stations_data(self, response_data):
+        result = {}
+
+        parser = BeautifulSoup(markup=response_data.decode("utf-8"), features='html.parser')
         for item in parser.find_all("div", class_="m-flip__content"):
             type = item.find("div", class_="text-norma")
             if not type:

@@ -3,6 +3,7 @@ from http import HTTPStatus
 import ssl
 
 import logging
+from main.models import AirQService
 
 
 SUBSTANCE_DICT = \
@@ -22,25 +23,27 @@ SUBSTANCE_DICT = \
         "CH2O": "Формальдегид",
         "C6H5OH": "Фенол",
         "C7H8": "Толуол",
+        "NH3": "Аммиак"
     }
 
 PDK_DICT = \
     {
         "NO2": "0.2",
-        "NO": "0",
-        "CO": "0",
+        "NO": "0.4",
+        "CO": "5",
         "O3": "0.16",
         "PM10": "0.3",
-        "PM2,5": "0",
-        "SO2": "0",
-        "H2S": "0",
-        "CH4": "0",
+        "PM2,5": "0.16",
+        "SO2": "0.5",
+        "H2S": "0.15",
+        "CH4": "50",
         "C8H8": "0",
         "C6H6": "0",
         "C10H8": "0",
         "CH2O": "0",
         "C6H5OH": "0",
         "C7H8": "0",
+        "NH3": "0.2"
     }
 
 
@@ -55,7 +58,16 @@ class CustomAirQualityService:
 
     URL = ""
     STATIONS_URN = ""
-    AVERAGE_URN = ""
+    DATA_URN = ""
+
+    def get_service_id(self):
+        service = AirQService.objects.filter(url=self.URL).first()
+
+        if not service:
+            logging.error('Cannot get service if for {}'.format(self.__class__))
+            return -1
+        else:
+            return service.id
 
     def get_average_data(self):
         response_data = self.request_average_data()
@@ -78,19 +90,19 @@ class CustomAirQualityService:
             try:
                 conn = http.client.HTTPSConnection(self.URL, context=context)
                 try:
-                    conn.request("GET", self.AVERAGE_URN)
+                    conn.request("GET", self.DATA_URN)
                     response = conn.getresponse()
 
                     if response.status == HTTPStatus.OK:
                         return response.read()
 
-                    self.log_error('Attempt #{} to get average data failed.'.format(attempt + 1))
+                    self.log_error('Attempt #{} to get stations data failed.'.format(attempt + 1))
                 finally:
                     conn.close()
             except Exception as ex:
-                self.log_error('Attempt #{} to get average data failed. Exception: {}'
+                self.log_error('Attempt #{} to get stations data failed. Exception: {}'
                                .format(attempt + 1, ex))
-        self.log_error('Can not get average list')
+        self.log_error('Can not get stations data')
         return
 
     def parse_average_data(self, response_data):
@@ -135,6 +147,9 @@ class CustomAirQualityService:
         pass
 
     def get_station_data(self, station_id):
+        pass
+
+    def get_all_stations_data(self):
         pass
 
     def log_error(self, message):
