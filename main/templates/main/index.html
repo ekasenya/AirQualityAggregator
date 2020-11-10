@@ -15,12 +15,12 @@
 
 <div class="container" style="margin:10px">
     <div class="row">
+        {% for key, value in service_data.items %}
         <div class="col-sm">
-           {% include "main/service_summary_data.html" with service_name="MosEcoMonitoring" list=mos_eco %}
+          {% include "main/service_summary_data.html" with service_name=key list=value %}
         </div>
-        <div class="col-sm">
-          {% include "main/service_summary_data.html" with service_name="AirCms" list=air_cms %}
-        </div>
+        {% endfor %}
+
     </div>
 </div>
 

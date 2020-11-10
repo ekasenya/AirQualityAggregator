@@ -60,6 +60,8 @@ class CustomAirQualityService:
     STATIONS_URN = ""
     DATA_URN = ""
 
+    NORMALIZE_RATE = 1
+
     def get_service_id(self):
         service = AirQService.objects.filter(url=self.URL).first()
 

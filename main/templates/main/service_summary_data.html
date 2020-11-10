@@ -3,17 +3,17 @@
   <h5 class="card-header service-card-header">{{ service_name }}</h5>
   <div class="card-body">
     <div class="card-deck">
-        {% for  key, value in list.items %}
-            {% if forloop.counter|divisibleby:3 %}
+        {% for item in list %}
+        {% if forloop.counter|divisibleby:3 %}
             </div>
             <br>
             <div class="card-deck">
             {% endif %}
             <div class="card" style="width: 18rem;">
-                <h5 class="card-header value-card-header">{{ key }}</h5>
+                <h5 class="card-header value-card-header">{{ item|get_dict_value:"substance__shortname" }}</h5>
                 <div class="card-body">
-                    <h5 class="card-title" align="center">{{ substances|get_dict_value:key}}</h5>
-                    <p class="card-text value" align="center">{{ value }}</p>
+                    <h5 class="card-title" align="center">{{ item|get_dict_value:"substance__name_ru"}}</h5>
+                    <p class="card-text value" align="center">{{ item|get_dict_value:"avg_value"|floatformat:3 }}</p>
                 </div>
             </div>
 

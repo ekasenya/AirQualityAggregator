@@ -44,3 +44,4 @@ class MeasuringDetail(models.Model):
     station = models.ForeignKey(Station, on_delete=models.CASCADE)
     substance = models.ForeignKey(Substance, on_delete=models.CASCADE)
     value = models.FloatField(null=True)
+

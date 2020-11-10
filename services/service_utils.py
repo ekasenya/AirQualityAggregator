@@ -40,9 +40,11 @@ def pull_stations_data():
             class_ = getattr(module, class_name)
             instance = class_()
 
+            logging.info("Start pulling data. Service: {}".format(class_name))
             service_id = instance.get_service_id()
 
             if service_id <= 0:
+                logging.info("Service id not found: {}".format(class_name))
                 continue
 
             measuring = Measuring()
@@ -64,9 +66,12 @@ def pull_stations_data():
                         measuring_det.station_id = station_id
                         measuring_det.substance = substance
                         try:
-                            measuring_det.value = float(value)
+                            measuring_det.value = float(value) / instance.NORMALIZE_RATE
                         except ValueError:
                             measuring_det.value = None
                         measuring_det.save()
+
         except Exception as ex:
             logging.error('Refresh stations data error:', ex)
+
+        logging.info("Finish pulling data. Service: {}".format(class_name))
