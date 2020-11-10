@@ -3,7 +3,7 @@ import importlib
 import logging
 
 from datetime import datetime
-from main.models import Measuring, Substance
+from main.models import Measuring, Substance, MeasuringDetail
 
 
 def refresh_station_list():
@@ -33,8 +33,6 @@ def refresh_station_list():
 
 def pull_stations_data():
 
-    createdate = datetime.now()
-
     for service in AirQService.objects.all():
         try:
             module_path, _, class_name = service.class_name.rpartition('.')
@@ -47,6 +45,11 @@ def pull_stations_data():
             if service_id <= 0:
                 continue
 
+            measuring = Measuring()
+            measuring.service_id = service_id
+            measuring.createdate = datetime.now()
+            measuring.save()
+
             stations_data = instance.get_all_stations_data()
             if stations_data:
                 for station_id, substance_dict in stations_data.items():
@@ -56,15 +59,14 @@ def pull_stations_data():
                             logging.error('Substance {} not found'.format(key))
                             continue
 
-                        measuring = Measuring()
-                        measuring.service_id = service_id
-                        measuring.station_id = station_id
-                        measuring.substance = substance
+                        measuring_det = MeasuringDetail()
+                        measuring_det.measuring = measuring
+                        measuring_det.station_id = station_id
+                        measuring_det.substance = substance
                         try:
-                            measuring.value = float(value)
+                            measuring_det.value = float(value)
                         except ValueError:
-                            measuring.value = None
-                        measuring.createdate = createdate
-                        measuring.save()
+                            measuring_det.value = None
+                        measuring_det.save()
         except Exception as ex:
             logging.error('Refresh stations data error:', ex)

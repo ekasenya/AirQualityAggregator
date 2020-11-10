@@ -36,7 +36,11 @@ class Substance(models.Model):
 
 class Measuring(models.Model):
     service = models.ForeignKey(AirQService, on_delete=models.CASCADE)
+    createdate = models.DateTimeField()
+
+
+class MeasuringDetail(models.Model):
+    measuring = models.ForeignKey(Measuring, on_delete=models.CASCADE)
     station = models.ForeignKey(Station, on_delete=models.CASCADE)
     substance = models.ForeignKey(Substance, on_delete=models.CASCADE)
     value = models.FloatField(null=True)
-    createdate = models.DateTimeField()
