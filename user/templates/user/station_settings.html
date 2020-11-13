@@ -37,8 +37,8 @@
         <div class="col-7">
           <div class="text-right">
               <div class="btn-group" role="group" align="right">
-                  <a class="{% if my_stations != '1' %}btn btn-secondary{% else %}btn btn-outline-secondary{% endif %}" href="?next={{next}}" >All stations</a>
-                  <a class="{% if my_stations == '1' %}btn btn-secondary{% else %}btn btn-outline-secondary{% endif %}" href="?next={{next}}&my_stations=1">My stations</a>
+                  <a class="{% if my_stations != '1' %}btn btn-secondary{% else %}btn btn-outline-secondary{% endif %}" href="?service_id={{service_id}}&next={{next}}" >All stations</a>
+                  <a class="{% if my_stations == '1' %}btn btn-secondary{% else %}btn btn-outline-secondary{% endif %}" href="?service_id={{service_id}}&next={{next}}&my_stations=1">My stations</a>
               </div>
           </div>
         </div>

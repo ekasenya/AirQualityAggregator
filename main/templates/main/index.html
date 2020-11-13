@@ -10,18 +10,46 @@
 
 {% load main_tags %}
 
+{% if user.is_authenticated %}
+<div class="text-right">
+  <div class="btn-group" role="group" align="right">
+      <a class="{% if my_stations != '1' %}btn btn-secondary{% else %}btn btn-outline-secondary{% endif %}" href="?my_stations=0" >Situation in the city</a>
+      <a class="{% if my_stations == '1' %}btn btn-secondary{% else %}btn btn-outline-secondary{% endif %}" href="?my_stations=1">My stations</a>
+  </div>
+</div>
+{% else %}
 <h2>Average data in the city</h2>
-
-
+{% endif %}
 <div class="container" style="margin:10px">
-    <div class="row">
-        {% for key, value in service_data.items %}
-        <div class="col-sm">
-          {% include "main/service_summary_data.html" with service_name=key list=value %}
-        </div>
-        {% endfor %}
 
-    </div>
+    {% if my_stations == '0' %}
+        <div class="row">
+            {% for key, value in service_data.items %}
+            <div class="col-sm">
+              {% include "main/service_summary_data.html" with service_id=key station_id=0 list=value %}
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div>
+            {% for service_id, stations in service_data.items %}
+            <div class="card">
+              <div class="card-header">
+                {{ service_id|get_service_name }}
+              </div>
+              <div class="card-body">
+                  {% for key, value in stations.items %}
+                    <div class="col-sm">
+                        {% include "main/service_summary_data.html" with service_id=service_id station_id=key list=value %}
+                    </div>
+                  {% endfor %}
+              </div>
+            </div>
+
+            {% endfor %}
+        </div>
+
+    {% endif %}
 </div>
 
 
