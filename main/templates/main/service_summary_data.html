@@ -5,7 +5,7 @@
  <div class="card-body">
     <div class="card-deck">
         {% for item in list %}
-        {% if forloop.counter0|divisibleby:2 %}
+        {% if forloop.counter0|divisibleby:count_in_row  %}
             </div>
             <br>
             <div class="card-deck">

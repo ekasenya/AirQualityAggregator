@@ -32,6 +32,7 @@ class Substance(models.Model):
     name_ru = models.CharField(max_length=128)
     name_en = models.CharField(max_length=128)
     limit_value = models.FloatField()
+    show = models.BooleanField(default=True)
 
 
 class Measuring(models.Model):

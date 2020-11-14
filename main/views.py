@@ -39,17 +39,18 @@ class IndexView(TemplateView):
                 station_data = {}
                 for station in stations:
                     values = MeasuringDetail.objects.filter(measuring_id=measure.id, station_id=station['station_id'])\
-                            .select_related('substance')\
+                            .select_related('substance').filter(substance__show=True)\
                             .values('substance_id', 'substance__shortname', 'substance__name_ru')\
                             .annotate(avg_value=Avg('value')).order_by('substance__shortname')
 
-                    #if len(values):
-                    station_data[station['station_id']] = list(values)
+                    if len(values):
+                        station_data[station['station_id']] = list(values)
 
                 service_data[service.id] = station_data
             else:
                 service_data[service.id] = list(
                     MeasuringDetail.objects.filter(measuring_id=measure.id).select_related('substance') \
+                        .filter(substance__show=True)
                         .values('substance_id', 'substance__shortname', 'substance__name_ru') \
                         .annotate(avg_value=Avg('value')).order_by('substance__shortname'))
 
