@@ -13,40 +13,52 @@
 {% if user.is_authenticated %}
 <div class="text-right">
   <div class="btn-group" role="group" align="right">
-      <a class="{% if my_stations != '1' %}btn btn-secondary{% else %}btn btn-outline-secondary{% endif %}" href="?my_stations=0" >Situation in the city</a>
-      <a class="{% if my_stations == '1' %}btn btn-secondary{% else %}btn btn-outline-secondary{% endif %}" href="?my_stations=1">My stations</a>
+      <a class="{% if my_stations != '1' %}btn btn-secondary{% else %}btn btn-outline-secondary{% endif %}" href="?my_stations=0&group_type={{ group_type }}" >Situation in the city</a>
+      <a class="{% if my_stations == '1' %}btn btn-secondary{% else %}btn btn-outline-secondary{% endif %}" href="?my_stations=1&group_type={{ group_type }}">My stations</a>
   </div>
 </div>
 {% else %}
 <h2>Average data in the city</h2>
 {% endif %}
+
+<div class="text-left">
+  <div class="btn-group" role="group" align="right">
+      <a class="{%if group_type == '0' %} active-link {% else %} inactive-link {% endif %}" href="?my_stations={{ my_stations }}&group_type=0" >By services</a>
+      <a class="{%if group_type == '1' %} active-link {% else %} inactive-link {% endif %}" href="?my_stations={{ my_stations }}&group_type=1">By substance</a>
+  </div>
+</div>
 <div class="container" style="margin:10px">
 
     {% if my_stations == '0' %}
         <div class="row">
             {% for key, value in service_data.items %}
             <div class="col-sm">
-              {% include "main/service_summary_data.html" with service_id=key station_id=0 list=value count_in_row=2 %}
+              {% include "main/service_summary_data.html" with id=key station_id=0 list=value count_in_row=2 group_type=group_type %}
             </div>
             {% endfor %}
         </div>
+
     {% else %}
         <div>
-            {% for service_id, stations in service_data.items %}
-            <div class="card">
-              <div class="card-header">
-                {{ service_id|get_service_name }}
-              </div>
-              <div class="card-body">
-                  {% for key, value in stations.items %}
-                    <div class="col-sm">
-                        {% include "main/service_summary_data.html" with service_id=service_id station_id=key list=value count_in_row=4 %}
-                    </div>
-                  {% endfor %}
-              </div>
-            </div>
+            {% if group_type == '0' %}
 
-            {% endfor %}
+                {% for service_id, stations in service_data.items %}
+                <div class="card">
+                  <div class="card-header">
+                    {{ service_id|get_service_name }}
+                  </div>
+                  <div class="card-body">
+                      {% for key, value in stations.items %}
+                        <div class="col-sm">
+                            {% include "main/service_summary_data.html" with service_id=service_id station_id=key list=value count_in_row=4 %}
+                        </div>
+                      {% endfor %}
+                  </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                Group by substance
+            {% endif %}
         </div>
 
     {% endif %}

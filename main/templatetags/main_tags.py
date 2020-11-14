@@ -1,6 +1,6 @@
 from django import template
 
-from main.models import AirQService, Station
+from main.models import AirQService, Station, Substance
 
 register = template.Library()
 
@@ -27,5 +27,14 @@ def get_station_name(id):
     try:
         station = Station.objects.get(id=id)
         return station.name
+    except Exception as ex:
+        return 'Unknown'
+
+
+@register.filter(name='get_substance_name')
+def get_substance_name(id):
+    try:
+        substance = Substance.objects.get(id=id)
+        return substance.name_ru
     except Exception as ex:
         return 'Unknown'

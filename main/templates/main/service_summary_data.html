@@ -1,8 +1,19 @@
  {% load main_tags %}
  {% load static %}
 
-  <h5 class="card-header service-card-header">{% if station_id > 0 %} {{ station_id|get_station_name }} {% else %} {{ service_id|get_service_name }} {% endif %}</h5>
- <div class="card-body">
+  <h5 class="card-header service-card-header">
+      {% if station_id > 0 %}
+        {{ station_id|get_station_name }}
+      {% elif group_type == '0' %}
+        {{ id|get_service_name }}
+      {% else  %}
+        {{ id| get_substance_name }}
+        <a href="{% url 'substance-detail-all' id %}">
+            <img src='{% static "img/graph_icon.png" %}' width="25" height="25" style="float:right">
+        </a>
+      {% endif %}
+  </h5>
+  <div class="card-body">
     <div class="card-deck">
         {% for item in list %}
         {% if forloop.counter0|divisibleby:count_in_row  %}
@@ -12,14 +23,23 @@
             {% endif %}
             <div class="card" style="width: 18rem;">
                 <h5 class="card-header value-card-header">
-                    {{ item|get_dict_value:"substance__shortname" }}
-                    <a href="{% url 'substance-detail' service_id station_id item|get_dict_value:'substance_id' %}">
-                        <img src='{% static "img/graph_icon.png" %}' width="25" height="25" style="float:right">
-                    </a>
+                    {% if group_type == '0' %}
+                        {{ item|get_dict_value:"substance__shortname" }}
+                        <a href="{% url 'substance-detail' id station_id item|get_dict_value:'substance_id' %}">
+                            <img src='{% static "img/graph_icon.png" %}' width="25" height="25" style="float:right">
+                        </a>
+                    {% else %}
+                        {{ item.service_id|get_service_name }}
+                    {% endif %}
+
                 </h5>
                 <div class="card-body">
-                    <h5 class="card-title" align="center">{{ item|get_dict_value:"substance__name_ru"}}</h5>
-                    <p class="card-text value" align="center">{{ item|get_dict_value:"avg_value"|floatformat:3 }}</p>
+                    {% if group_type == '0' %}
+                        <h5 class="card-title" align="center">{{ item|get_dict_value:"substance__name_ru"}}</h5>
+                        <p class="card-text value" align="center">{{ item|get_dict_value:"avg_value"|floatformat:3 }}</p>
+                    {% else %}
+                        <h5 class="card-title" align="center">{{ item|get_dict_value:"avg_value"|floatformat:3 }}</h5>
+                    {% endif %}
                 </div>
             </div>
 

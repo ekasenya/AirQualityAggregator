@@ -10,15 +10,31 @@
 
 {% load static %}
 {% load main_tags %}
+{% if service_id == '0' %}
+  <h2>{{ substance_name }}</h2>
+    <div class="container">
+        <div class="row">
+         {% for item in last_measuring_data %}
+            <div class="col-sm">
+                <h3>Service : {{ item|get_dict_value:"service_name" }} </h3>
+                <div> Last measure : {{ item|get_dict_value:"last_datetime" }} </div>
+                <div> Value : {{ item|get_dict_value:"last_value"|floatformat:3 }}</div>
+            </div>
+         {% endfor %}
+        </div>
+    </div>
+{% else %}
+ <h2>{{service_id|get_service_name}}</h2>
+ <h3>{{ substance_name}}</h3>
+ <div>
+  Last measure : {{ last_datetime }}
+ </div>
+ <div>
+  Value : {{ last_value|floatformat:3 }}
+ </div>
+{% endif %}
 
-<h2>{{service_id|get_service_name}}</h2>
-<h3>{{ substance_name}}</h3>
-<div>
- Last measure : {{ last_datetime }}
-</div>
-<div>
- Value : {{ last_value|floatformat:3 }}
-</div>
+
 
  <img src="data:image/png;base64, {{ graph }}" alt="" height="400", width="700">
 

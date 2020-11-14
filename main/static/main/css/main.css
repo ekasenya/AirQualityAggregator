@@ -1,11 +1,26 @@
 .service-card-header{background-color:#98CCD7!important}
 
+.active-link {
+    margin: 5px;
+    text-decoration: underline;
+}
+
+.inactive-link {
+    margin: 5px;
+    color: grey;
+}
+
 .value-card-header {
     font-size:18px;
-    color:#8D9091
+    color:#8D9091;
 }
 
 .value {
     font-size:24px;
     font-weight: bold;
+}
+
+
+.substance-group-type {
+    margin: 5px;
 }
