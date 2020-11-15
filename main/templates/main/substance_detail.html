@@ -16,7 +16,7 @@
         <div class="row">
          {% for item in last_measuring_data %}
             <div class="col-sm">
-                <h3>Service : {{ item|get_dict_value:"name" }} </h3>
+                <h3> {{ item|get_dict_value:"name" }} </h3>
                 <div> Last measure : {{ item|get_dict_value:"last_datetime" }} </div>
                 <div> Value : {{ item|get_dict_value:"last_value"|floatformat:3 }}</div>
             </div>
@@ -36,7 +36,7 @@
 
 
 
- <img src="data:image/png;base64, {{ graph }}" alt="" height="400", width="700">
+ <img src="data:image/png;base64, {{ graph }}" alt="" height="400", width="1000">
 
 {% endblock %}
 

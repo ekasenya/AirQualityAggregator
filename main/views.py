@@ -136,11 +136,7 @@ class SubstanceDetailView(CustomSubstanceDetailView):
 
         today = datetime.today()
         measuring_qs = Measuring.objects.filter(createdate__year=today.year, createdate__month=today.month,
-                                                createdate__day=12, service_id=service_id)
-
-        # value_qs = MeasuringDetail.objects.filter(substance_id=substance_id, measuring__in=measuring_qs). \
-        #    select_related('measuring').values('measuring__createdate') \
-        #    .annotate(avg_value=Avg('value')).order_by('measuring__createdate')
+                                                createdate__day=today.day, service_id=service_id)
 
         value_qs = MeasuringDetail.objects.filter(substance_id=substance_id, measuring__in=measuring_qs) \
             .select_related('measuring').values('measuring__createdate') \
@@ -189,6 +185,8 @@ class SubstanceServicesDetailView(CustomSubstanceDetailView):
         plt.cla()
         plt.axhline(substance.limit_value, color='red', ls='--', label="ПДК")
 
+        plt_list = []
+
         last_measuring_data = []
         today = datetime.today()
         for station in UserStations.objects.select_related('station') \
@@ -210,10 +208,10 @@ class SubstanceServicesDetailView(CustomSubstanceDetailView):
                      .first().value})
 
             measuring_qs = Measuring.objects.filter(createdate__year=today.year, createdate__month=today.month,
-                                                    createdate__day=12)
+                                                    createdate__day=today.day)
 
             value_qs = MeasuringDetail.objects.filter(substance_id=substance_id, measuring__in=measuring_qs,
-                                                      station_id=station.id) \
+                                                      station_id=station['station_id']) \
                 .select_related('measuring').values('measuring__createdate') \
                 .annotate(hour=TruncHour('measuring__createdate')).values('hour') \
                 .annotate(avg_value=Avg('value')).values('hour', 'avg_value').order_by('hour')
@@ -224,18 +222,18 @@ class SubstanceServicesDetailView(CustomSubstanceDetailView):
                 values.append(round(item['avg_value'], 3))
                 hours.append('{}:00'.format(str(item['hour'].hour).zfill(2)))
 
-            plt.plot(hours, values, marker='o', label=station.name)
+            plt_list.append(plt.plot(hours, values, marker='o', label=station['station__name']))
 
         context.update({'last_measuring_data': last_measuring_data})
 
-        plt.ylim(0, 1.5 * substance.limit_value)
-        plt.legend(numpoints=1)
+        plt.ylim(0, 2 * substance.limit_value)
         plt.grid(True)
+        plt.legend(numpoints=1, bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
 
         fig = plt.gcf()
         buf = io.BytesIO()
 
-        fig.savefig(buf, format="png")
+        fig.savefig(buf, format="png", bbox_inches='tight')
         buf.seek(0)
         string = base64.b64encode(buf.read())
         uri = urllib.parse.quote(string)
@@ -277,7 +275,7 @@ class SubstanceStationsDetailView(CustomSubstanceDetailView):
                      .first().value})
 
             measuring_qs = Measuring.objects.filter(createdate__year=today.year, createdate__month=today.month,
-                                                    createdate__day=12, service_id=service.id)
+                                                    createdate__day=today.day, service_id=service.id)
 
             value_qs = MeasuringDetail.objects.filter(substance_id=substance_id, measuring__in=measuring_qs) \
                 .select_related('measuring').values('measuring__createdate') \
