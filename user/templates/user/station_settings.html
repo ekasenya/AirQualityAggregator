@@ -15,7 +15,7 @@
     <div class="list-group-flush" id="list-tab" role="tablist">
       {% if service_list %}
       {% for item in service_list %}
-        <a class="list-group-item list-group-item-action {%if service_id == item.id %} active {% endif %}" id="{{ item.id }}" href="?service_id={{item.id}}&next={{next}}" role="tab">{{ item.name }}</a>
+        <a class="list-group-item list-group-item-action {%if service_id == item.id %} active {% endif %}" id="{{ item.id }}" href="?service_id={{item.id}}&next={{next}}" role="tab">{{ item.name_ru }}</a>
       {% endfor %}
       {% else %}
       No services
@@ -29,7 +29,7 @@
             <div class="input-group">
                 <input class="form-control" name="q" type="search" placeholder="Search" aria-label="Search" value="{{ q }}">
               <div class="input-group-append">
-              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Поиск</button>
               </div>
             </div>
         </form>
@@ -37,8 +37,8 @@
         <div class="col-7">
           <div class="text-right">
               <div class="btn-group" role="group" align="right">
-                  <a class="{% if my_stations != '1' %}btn btn-secondary{% else %}btn btn-outline-secondary{% endif %}" href="?service_id={{service_id}}&next={{next}}" >All stations</a>
-                  <a class="{% if my_stations == '1' %}btn btn-secondary{% else %}btn btn-outline-secondary{% endif %}" href="?service_id={{service_id}}&next={{next}}&my_stations=1">My stations</a>
+                  <a class="{% if my_stations != '1' %}btn btn-secondary{% else %}btn btn-outline-secondary{% endif %}" href="?service_id={{service_id}}&next={{next}}" >Все станции</a>
+                  <a class="{% if my_stations == '1' %}btn btn-secondary{% else %}btn btn-outline-secondary{% endif %}" href="?service_id={{service_id}}&next={{next}}&my_stations=1">Мои станции</a>
               </div>
           </div>
         </div>
@@ -56,7 +56,7 @@
                             <div class="{% if station.is_user_station == 1 %}user-station{% else %} empty-station{% endif %}" id="station-{{ station.id }}" name="{{ station.id }}" >{% if station.is_user_station == 1 %}&#9733;{% else %}&#9734;{% endif %}</div>
                         </div>
                         <div class="col-md-10">
-                           {{ station.name }}
+                           {{ station.name_ru }}
                         </div>
 
                     </row>
@@ -68,7 +68,7 @@
                             <div class="{% if station.is_user_station == 1 %}user-station{% else %} empty-station{% endif %}" id="station-{{ station.id }}" name="{{ station.id }}" >{% if station.is_user_station == 1 %}&#9733;{% else %}&#9734;{% endif %}</div>
                         </div>
                         <div class="col-md-10">
-                            {{ station.name }}
+                            {{ station.name_ru }}
                         </div>
 
                     </row>
@@ -84,7 +84,7 @@
       <ul class="pagination">
           {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&next={{next}}&service_id={{service_id}}&my_stations={{ my_stations }}" tabindex="-1">Prev</a>
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&next={{next}}&service_id={{service_id}}&my_stations={{ my_stations }}" tabindex="-1">Предыдущая</a>
             </li>
           {% endif %}
 
@@ -101,7 +101,7 @@
 
           {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}&next={{next}}&service_id={{service_id}}&my_stations={{ my_stations }}">Next</a>
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&next={{next}}&service_id={{service_id}}&my_stations={{ my_stations }}">Следущая</a>
             </li>
           {% endif %}
       </ul>

@@ -91,7 +91,7 @@ class StationSettingsView(LoginRequiredMixin, ListView):
         context.update({'my_stations': self.request.GET.get('my_stations', 0)})
 
         context.update({'service_id': int(self.request.GET.get('service_id', self.get_first_service()))})
-        context.update({'service_list': AirQService.objects.all().order_by('name')})
+        context.update({'service_list': AirQService.objects.all().order_by('name_ru')})
 
         context.update({'q': self.request.GET.get('q', '')})
 
@@ -102,7 +102,7 @@ class StationSettingsView(LoginRequiredMixin, ListView):
         qs = Station.objects.filter(service_id=self.request.GET.get('service_id', self.get_first_service()))
 
         if search_string:
-            qs = qs.filter(name__icontains=search_string)
+            qs = qs.filter(name_ru__icontains=search_string)
 
         user_id = self.request.user.id
         qs = qs.annotate(is_user_station=Sum(
@@ -111,10 +111,10 @@ class StationSettingsView(LoginRequiredMixin, ListView):
         if self.request.GET.get('my_stations', 0) == '1':
             qs = qs.filter(is_user_station=1)
 
-        return qs.order_by('name').values('id', 'name', 'is_user_station')
+        return qs.order_by('name_ru').values('id', 'name_ru', 'is_user_station')
 
     def get_first_service(self):
-        return AirQService.objects.all().order_by('name').first().id
+        return AirQService.objects.all().order_by('name_ru').first().id
 
 
 @login_required

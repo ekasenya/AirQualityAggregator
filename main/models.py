@@ -4,7 +4,8 @@ from user.models import UserProfile
 
 
 class AirQService(models.Model):
-    name = models.CharField(max_length=64)
+    name_ru = models.CharField(max_length=64)
+    name_en = models.CharField(max_length=64)
     url = models.CharField(max_length=128)
     stations_urn = models.CharField(max_length=128)
     average_urn = models.CharField(max_length=128)
@@ -15,7 +16,8 @@ class AirQService(models.Model):
 class Station(models.Model):
     service = models.ForeignKey(AirQService, on_delete=models.CASCADE)
     station_id = models.CharField(max_length=128)
-    name = models.CharField(max_length=64)
+    name_ru = models.CharField(max_length=64)
+    name_en = models.CharField(max_length=64)
     lat = models.FloatField(null=True)
     lon = models.FloatField(null=True)
     address = models.CharField(max_length=256)

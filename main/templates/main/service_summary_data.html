@@ -34,7 +34,7 @@
                             <img src='{% static "img/graph_icon.png" %}' width="25" height="25" style="float:right">
                         </a>
                     {% elif my_stations == '1' %}
-                        {{ item|get_dict_value:"station__name" }}
+                        {{ item|get_dict_value:"station__name_ru" }}
                     {% else %}
                         {{ item.service_id|get_service_name }}
                     {% endif %}

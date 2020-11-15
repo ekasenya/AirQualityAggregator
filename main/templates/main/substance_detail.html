@@ -17,26 +17,27 @@
          {% for item in last_measuring_data %}
             <div class="col-sm">
                 <h3> {{ item|get_dict_value:"name" }} </h3>
-                <div> Last measure : {{ item|get_dict_value:"last_datetime" }} </div>
-                <div> Value : {{ item|get_dict_value:"last_value"|floatformat:3 }}</div>
+                <div> Посл. измерение : {{ item|get_dict_value:"last_datetime" }} </div>
+                <div> Значение : {{ item|get_dict_value:"last_value"|floatformat:3 }}</div>
             </div>
          {% endfor %}
         </div>
     </div>
+    <img src="data:image/png;base64, {{ graph }}" alt="" height="400", width="1000">
 {% else %}
  <h2>{{service_id|get_service_name}}</h2>
  <h3>{{ substance_name}}</h3>
  <div>
-  Last measure : {{ last_datetime }}
+  Посл. измерение : {{ last_datetime }}
  </div>
  <div>
-  Value : {{ last_value|floatformat:3 }}
+  Значение : {{ last_value|floatformat:3 }}
  </div>
+ <img src="data:image/png;base64, {{ graph }}" alt="" height="400", width="700">
 {% endif %}
 
 
 
- <img src="data:image/png;base64, {{ graph }}" alt="" height="400", width="1000">
 
 {% endblock %}
 

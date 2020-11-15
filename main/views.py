@@ -24,6 +24,8 @@ class IndexView(TemplateView):
         my_stations = self.request.GET.get('my_stations', '0')
         group_type = self.request.GET.get('group_type', '0')
 
+        language = 0
+
         if group_type == '0':
             service_data = self.get_service_data_by_services(my_stations)
         else:
@@ -88,7 +90,7 @@ class IndexView(TemplateView):
                         values = MeasuringDetail.objects.filter(measuring_id=measure.id, substance_id=substance.id,
                                                                 station_id__in=stations) \
                             .select_related('station').filter(substance__show=True) \
-                            .values('station__station_id', 'station__name') \
+                            .values('station__station_id', 'station__name_ru') \
                             .annotate(avg_value=Avg('value'))
 
                         if len(values):
@@ -169,11 +171,11 @@ class SubstanceDetailView(CustomSubstanceDetailView):
         return context
 
 
-class SubstanceServicesDetailView(CustomSubstanceDetailView):
+class SubstanceStationsDetailView(CustomSubstanceDetailView):
     template_name = 'main/substance_detail.html'
 
     def get_context_data(self, **kwargs):
-        context = super(SubstanceServicesDetailView, self).get_context_data(**kwargs)
+        context = super(SubstanceStationsDetailView, self).get_context_data(**kwargs)
 
         context.update({'service_id': '0'})
 
@@ -191,21 +193,21 @@ class SubstanceServicesDetailView(CustomSubstanceDetailView):
         today = datetime.today()
         for station in UserStations.objects.select_related('station') \
                 .filter(user_id=self.request.user.id) \
-                .values('station_id', 'station__service_id', 'station__name'):
+                .values('station_id', 'station__service_id', 'station__name_ru'):
             measure = Measuring.objects.filter(service_id=station['station__service_id']).order_by(
                 '-createdate').first()
 
-            last_value_qs = MeasuringDetail.objects.filter(measuring_id=measure.id, substance_id=substance_id) \
+            last_value_qs = MeasuringDetail.objects.filter(measuring_id=measure.id, substance_id=substance_id,
+                                                           station_id=station['station_id']) \
                 .first()
 
             if not last_value_qs:
                 continue
 
             last_measuring_data.append(
-                {'name': station['station__name'],
+                {'name': station['station__name_ru'],
                  'last_datetime': measure.createdate.strftime('%d.%m.%Y %H:%M'),
-                 'last_value': MeasuringDetail.objects.filter(Q(measuring_id=measure.id) & Q(substance_id=substance_id)) \
-                     .first().value})
+                 'last_value': last_value_qs.value})
 
             measuring_qs = Measuring.objects.filter(createdate__year=today.year, createdate__month=today.month,
                                                     createdate__day=today.day)
@@ -222,7 +224,7 @@ class SubstanceServicesDetailView(CustomSubstanceDetailView):
                 values.append(round(item['avg_value'], 3))
                 hours.append('{}:00'.format(str(item['hour'].hour).zfill(2)))
 
-            plt_list.append(plt.plot(hours, values, marker='o', label=station['station__name']))
+            plt_list.append(plt.plot(hours, values, marker='o', label=station['station__name_ru']))
 
         context.update({'last_measuring_data': last_measuring_data})
 
@@ -242,11 +244,11 @@ class SubstanceServicesDetailView(CustomSubstanceDetailView):
         return context
 
 
-class SubstanceStationsDetailView(CustomSubstanceDetailView):
+class SubstanceServicesDetailView(CustomSubstanceDetailView):
     template_name = 'main/substance_detail.html'
 
     def get_context_data(self, **kwargs):
-        context = super(SubstanceStationsDetailView, self).get_context_data(**kwargs)
+        context = super(SubstanceServicesDetailView, self).get_context_data(**kwargs)
 
         context.update({'service_id': '0'})
 
@@ -270,7 +272,7 @@ class SubstanceStationsDetailView(CustomSubstanceDetailView):
                 continue
 
             last_measuring_data.append(
-                {'name': service.name, 'last_datetime': measure.createdate.strftime('%d.%m.%Y %H:%M'),
+                {'name': service.name_ru, 'last_datetime': measure.createdate.strftime('%d.%m.%Y %H:%M'),
                  'last_value': MeasuringDetail.objects.filter(Q(measuring_id=measure.id) & Q(substance_id=substance_id)) \
                      .first().value})
 
@@ -288,18 +290,18 @@ class SubstanceStationsDetailView(CustomSubstanceDetailView):
                 values.append(round(item['avg_value'], 3))
                 hours.append('{}:00'.format(str(item['hour'].hour).zfill(2)))
 
-            plt.plot(hours, values, marker='o', label=service.name)
+            plt.plot(hours, values, marker='o', label=service.name_ru)
 
         context.update({'last_measuring_data': last_measuring_data})
 
         plt.ylim(0, 1.5 * substance.limit_value)
-        plt.legend(numpoints=1)
+        plt.legend(numpoints=1, bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
         plt.grid(True)
 
         fig = plt.gcf()
         buf = io.BytesIO()
 
-        fig.savefig(buf, format="png")
+        fig.savefig(buf, format="png", bbox_inches='tight')
         buf.seek(0)
         string = base64.b64encode(buf.read())
         uri = urllib.parse.quote(string)

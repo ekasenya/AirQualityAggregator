@@ -7,11 +7,11 @@
 <div class="container-fluid">
     <div class="row" >
         <div class="col-sm-10 ">
-<h1>Settings</h1>
+<h1>Настройки профиля</h1>
 <form  method="post" enctype="multipart/form-data">
     {% csrf_token %}
   <div class="form-group row">
-    <label for="login" class="col-sm-2 col-form-label">Login</label>
+    <label for="login" class="col-sm-2 col-form-label">Логин</label>
     <div class="col-sm-4">
       <input type="text" class="form-control-plaintext" id="login" value="{{ user.username }}">
     </div>
@@ -24,13 +24,13 @@
     </div>
   </div>
     <div class="form-group row">
-        <label for="avatar" class="col-sm-2 col-form-label">Avatar</label>
+        <label for="avatar" class="col-sm-2 col-form-label">Аватар</label>
         <div class="col-sm-4">
             <img src='{% if user.avatar %} {{ user.avatar.url }} {% else %} {% static user_default_avatar %} {% endif %}' id="img-preview" width="100" height="100" alt="No image">
 
             <div class="custom-file">
               <input type="file" class="custom-file-input" id="avatar" name="avatar" accept="image/*"  onchange="loadFile(event)">
-              <label class="custom-file-label" for="avatar" id="file_name" data-browse="Upload">{{ file_name|default_if_none:'Select file...' }}</label>
+              <label class="custom-file-label" for="avatar" id="file_name" data-browse="Загрузить">{{ file_name|default_if_none:'Выберите файл...' }}</label>
                 <p style="color: red">{{ form.avatar.errors.as_text }}</p>
             </div>
         </div>
@@ -38,7 +38,7 @@
 
   <div class="form-group row">
     <div class="col-sm-10">
-        <button type="submit" class="btn btn-primary"  value="Update">Save</button>
+        <button type="submit" class="btn btn-primary"  value="Update">Сохранить</button>
         <input type="hidden" name="next" value="{{ next }}">
     </div>
   </div>

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load i18n %}
 {% load static %}
 <head>
-    {% block title %}<title>Moscow air quality</title>{% endblock %}
+    {% block title %}<title>Качество воздуха в Москве</title>{% endblock %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -23,7 +24,7 @@
         <div>
             <img src='{% static "img/logotype.png" %}' width="50" height="50">
             <a class="navbar-brand" href="{% url 'index' %}">
-                <h1 class="title">Moscow air quality aggregator</h1>
+                <h1 class="title">Агрегатор данных о качестве воздуха</h1>
             </a>
         </div>
 

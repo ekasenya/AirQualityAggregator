@@ -17,7 +17,7 @@ def get_dict_value(dict, key):
 def get_service_name(id):
     try:
         service = AirQService.objects.get(id=id)
-        return service.name
+        return service.name_ru
     except Exception as ex:
         return 'Unknown'
 
@@ -26,7 +26,7 @@ def get_service_name(id):
 def get_station_name(id):
     try:
         station = Station.objects.get(id=id)
-        return station.name
+        return station.name_ru
     except Exception as ex:
         return 'Unknown'
 
