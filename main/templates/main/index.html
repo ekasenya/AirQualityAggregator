@@ -33,7 +33,7 @@
         <div class="row">
             {% for key, value in service_data.items %}
             <div class="col-sm">
-              {% include "main/service_summary_data.html" with id=key station_id=0 list=value count_in_row=2 group_type=group_type %}
+              {% include "main/service_summary_data.html" with id=key station_id=0 list=value count_in_row=2 group_type=group_type my_stations=my_stations %}
             </div>
             {% endfor %}
         </div>
@@ -50,14 +50,20 @@
                   <div class="card-body">
                       {% for key, value in stations.items %}
                         <div class="col-sm">
-                            {% include "main/service_summary_data.html" with service_id=service_id station_id=key list=value count_in_row=4 %}
+                            {% include "main/service_summary_data.html" with id=service_id station_id=key list=value count_in_row=4 my_stations=my_stations %}
                         </div>
                       {% endfor %}
                   </div>
                 </div>
                 {% endfor %}
             {% else %}
-                Group by substance
+                 <div class="row">
+                    {% for key, value in service_data.items %}
+                    <div class="col-sm">
+                      {% include "main/service_summary_data.html" with id=key station_id=0 list=value count_in_row=2 group_type=group_type my_stations=my_stations %}
+                    </div>
+                    {% endfor %}
+                </div>
             {% endif %}
         </div>
 

@@ -1,19 +1,24 @@
  {% load main_tags %}
  {% load static %}
 
-  <h5 class="card-header service-card-header">
-      {% if station_id > 0 %}
+ <h5 class="card-header service-card-header">
+    {% if station_id > 0 %}
         {{ station_id|get_station_name }}
-      {% elif group_type == '0' %}
+    {% elif group_type == '0' %}
         {{ id|get_service_name }}
-      {% else  %}
-        {{ id| get_substance_name }}
-        <a href="{% url 'substance-detail-all' id %}">
+    {% else  %}
+        {{ id|get_substance_name }}
+        {% if my_stations == '0' %}
+            <a href="{% url 'substance-det-services' id %}">
+        {% else %}
+            <a href="{% url 'substance-det-stations' id %}">
+        {% endif %}
             <img src='{% static "img/graph_icon.png" %}' width="25" height="25" style="float:right">
         </a>
-      {% endif %}
-  </h5>
-  <div class="card-body">
+    {% endif %}
+ </h5>
+
+   <div class="card-body">
     <div class="card-deck">
         {% for item in list %}
         {% if forloop.counter0|divisibleby:count_in_row  %}
@@ -28,6 +33,8 @@
                         <a href="{% url 'substance-detail' id station_id item|get_dict_value:'substance_id' %}">
                             <img src='{% static "img/graph_icon.png" %}' width="25" height="25" style="float:right">
                         </a>
+                    {% elif my_stations == '1' %}
+                        {{ item|get_dict_value:"station__name" }}
                     {% else %}
                         {{ item.service_id|get_service_name }}
                     {% endif %}
