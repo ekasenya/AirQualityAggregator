@@ -24,6 +24,7 @@
  6. Redis
  7. MatPlotLib
  8. FactoryBoy
+ 9. Docker compose
  
  ## Результат
  
