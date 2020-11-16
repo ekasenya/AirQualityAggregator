@@ -1,0 +1,22 @@
+  version: '3'
+    
+  services:
+    db:
+      image: postgres
+      ports: 
+        - "5432"
+      environment:
+        - POSTGRES_DB=air_quality
+        - POSTGRES_USER=django
+        - POSTGRES_PASSWORD=django
+    web:
+      build: .
+      command: /code/AirQualityAggregator/entrypoint.sh
+      volumes:
+        - .:/code/AirQualityAggregator
+      ports:
+        - "8000:80"
+      depends_on:
+        - db
+      links:
+        - db:db
