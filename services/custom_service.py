@@ -16,7 +16,7 @@ class CustomAirQualityService:
     NO_NAME = 'No name'
 
     URL = ""
-    
+
     NORMALIZE_RATE = 1
 
     def get_service_id(self):
