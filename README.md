@@ -48,7 +48,7 @@
  
  График изменения за последние сутки
  
- ![Alt text](img/My_stations_by_substance.png?raw=true "Схема БД") 
+ ![Alt text](img/Graph_station_substance.png?raw=true "Схема БД") 
  
  Группировка по загрязняющему веществу
  
