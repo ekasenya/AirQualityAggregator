@@ -19,14 +19,14 @@ class CustomAirQualityService:
 
     NORMALIZE_RATE = 1
 
-    def get_service_id(self):
+    def get_service(self):
         service = AirQService.objects.filter(url=self.URL).first()
 
         if not service:
             logging.error('Cannot get service if for {}'.format(self.__class__))
-            return -1
+            return None
         else:
-            return service.id
+            return service
 
     def get_average_data(self):
         response_data = self.request_average_data()
@@ -37,6 +37,11 @@ class CustomAirQualityService:
         return self.parse_average_data(response_data)
 
     def request_average_data(self):
+        service = self.get_service()
+
+        if not service:
+            return
+
         if not self.URL:
             raise AirQualityRequestError('Url is empty')
 
@@ -49,7 +54,7 @@ class CustomAirQualityService:
             try:
                 conn = http.client.HTTPSConnection(self.URL, context=context)
                 try:
-                    conn.request("GET", self.DATA_URN)
+                    conn.request("GET", service.average_urn)
                     response = conn.getresponse()
 
                     if response.status == HTTPStatus.OK:
@@ -78,7 +83,12 @@ class CustomAirQualityService:
         return station_list
 
     def request_station_list(self):
-        if not self.STATIONS_URN:
+        service = self.get_service()
+
+        if not service:
+            return
+
+        if not service.stations_urn:
             raise AirQualityRequestError('Url is empty')
 
         context = ssl._create_unverified_context()
@@ -87,7 +97,7 @@ class CustomAirQualityService:
             try:
                 conn = http.client.HTTPSConnection(self.URL, context=context)
                 try:
-                    conn.request("GET", self.STATIONS_URN)
+                    conn.request("GET", service.stations_urn)
                     response = conn.getresponse()
 
                     if response.status == HTTPStatus.OK:

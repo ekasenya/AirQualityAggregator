@@ -41,11 +41,13 @@ def pull_stations_data():
             instance = class_()
 
             logging.info("Start pulling data. Service: {}".format(class_name))
-            service_id = instance.get_service_id()
+            service = instance.get_service()
 
-            if service_id <= 0:
+            if not service:
                 logging.info("Service id not found: {}".format(class_name))
                 continue
+
+            service_id = service.id
 
             measuring = Measuring()
             measuring.service_id = service_id

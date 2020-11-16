@@ -71,10 +71,12 @@ class AirCmsService(CustomAirQualityService):
         pass
 
     def get_all_stations_data(self):
-        service_id = self.get_service_id()
+        service = self.get_service()
 
-        if service_id <= 0:
+        if not service:
             return
+
+        service_id = service.id
 
         # data from all stations
 
