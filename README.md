@@ -72,7 +72,7 @@
 
 Схема БД
 
-![Alt text](img/ERScheme.png?raw=true)
+![Alt text](img/ErScheme.png?raw=true)
  
  ## Дальнейшее развитие
   1. Интернационализация
