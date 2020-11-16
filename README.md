@@ -31,48 +31,48 @@
  
  Настройки пользователя
  
- ![Alt text](img/User_settings.png?raw=true "Схема БД")
+ ![Alt text](img/User_settings.png?raw=true)
  
  Настройка станций 
  
- ![Alt text](img/My_stations_settings_all.png?raw=true "Схема БД")
+ ![Alt text](img/My_stations_settings_all.png?raw=true )
  
  Избранные станции 
  
- ![Alt text](img/My_stations_settings.png?raw=true "Схема БД")
+ ![Alt text](img/My_stations_settings.png?raw=true)
   
   
  Ситуация в городе 
  
- ![Alt text](img/Main_screen_by_service.png?raw=true "Схема БД")  
+ ![Alt text](img/Main_screen_by_service.png?raw=true)  
  
  График изменения за последние сутки
  
- ![Alt text](img/Graph_station_substance.png?raw=true "Схема БД") 
+ ![Alt text](img/Graph_station_substance.png?raw=true) 
  
  Группировка по загрязняющему веществу
  
- ![Alt text](img/Main_screen_by_substance.png?raw=true "Схема БД")  
+ ![Alt text](img/Main_screen_by_substance.png?raw=true)  
  
  График изменения за последние сутки
  
- ![Alt text](img/Graph_by_services.png?raw=true "Схема БД")   
+ ![Alt text](img/Graph_by_services.png?raw=true)   
  
  Данные только избранных станций
  
- ![Alt text](img/My_stations_by_service.png?raw=true "Схема БД")     
+ ![Alt text](img/My_stations_by_service.png?raw=true)     
  
- ![Alt text](img/My_stations_by_substance.png?raw=true "Схема БД")  
+ ![Alt text](img/My_stations_by_substance.png?raw=true)  
  
  График изменения концентрации загрязняющего вещества на избранных станциях
  
- ![Alt text](img/My_stations_graph_by_substance.png?raw=true "Схема БД") 
+ ![Alt text](img/My_stations_graph_by_substance.png?raw=true) 
  
  ## Схемы
 
 Схема БД
 
-![Alt text](img/ERScheme.png?raw=true "Схема БД")
+![Alt text](img/ERScheme.png?raw=true)
  
  ## Дальнейшее развитие
   1. Интернационализация
