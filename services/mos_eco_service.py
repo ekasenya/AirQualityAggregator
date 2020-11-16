@@ -1,18 +1,15 @@
 import http.client
-from http import HTTPStatus
-from bs4 import BeautifulSoup
 import ssl
+from http import HTTPStatus
 
+from bs4 import BeautifulSoup
+
+from main.models import Station
 from services.custom_service import CustomAirQualityService
-from main.models import Station, AirQService
 
 
 class MosEcoService(CustomAirQualityService):
-    SCHEME = "https://"
     URL = "mosecom.mos.ru"
-    STATIONS_URN = "/stations/"
-    DATA_URN = "/vozdux/"
-    SERVICE_NAME = "MosEcoMonitoring"
 
     def parse_average_data(self, response_data):
         result = {}

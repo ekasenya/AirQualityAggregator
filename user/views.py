@@ -1,21 +1,20 @@
 import os
 
 from django.contrib.auth import login
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views import generic
-from django.views.generic.edit import UpdateView
-from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import models
 from django.db.models import Q
 from django.db.models import Sum, When, Case
-from django.db import models
-
-from user.forms import SignUpForm, UserSettings
-from user.models import UserProfile
-from main.models import AirQService, Station, UserStations
+from django.http import HttpResponse
+from django.views import generic
+from django.views.generic import ListView
+from django.views.generic.edit import UpdateView
 
 from AirQualityAggregator.settings.base import STATIONS_PER_PAGE
+from main.models import AirQService, Station, UserStations
+from user.forms import SignUpForm, UserSettings
+from user.models import UserProfile
 
 
 class SignUpView(generic.CreateView):

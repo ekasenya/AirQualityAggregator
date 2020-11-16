@@ -1,21 +1,14 @@
 import json
-import http.client
-from http import HTTPStatus
-import ssl
-import logging
 
-from services.custom_service import CustomAirQualityService
 from main.models import Station
+from services.custom_service import CustomAirQualityService
 
 
 class AirCmsService(CustomAirQualityService):
     SERVICE_NAME = 'Air civic monitoring system'
     MAX_CONNECT_ATTEMPTS = 3
 
-    SCHEME = "https://"
     URL = "aircms.online"
-    STATIONS_URN = "/php/guiapi.php?devices"
-    DATA_URN = "/php/guiapi.php?T=0"
 
     MIN_LAT = 55.5
     MAX_LAT = 56

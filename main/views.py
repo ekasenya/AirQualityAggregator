@@ -1,16 +1,15 @@
-from django.views.generic import TemplateView, ListView
-
+import base64
+import io
+import urllib
 from datetime import datetime
 
-from main.models import Measuring, MeasuringDetail, AirQService, Substance, UserStations
+import matplotlib
+import matplotlib.pyplot as plt
 from django.db.models import Avg, Q, Value, IntegerField
 from django.db.models.functions import TruncHour
+from django.views.generic import TemplateView
 
-import urllib, base64
-import io
-import matplotlib.pyplot as plt
-
-import matplotlib
+from main.models import Measuring, MeasuringDetail, AirQService, Substance, UserStations
 
 matplotlib.use('Agg')
 

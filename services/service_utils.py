@@ -1,9 +1,9 @@
-from main.models import Station, AirQService
 import importlib
 import logging
-
 from datetime import datetime
+
 from main.models import Measuring, Substance, MeasuringDetail
+from main.models import Station, AirQService
 
 
 def refresh_station_list():
@@ -24,7 +24,7 @@ def refresh_station_list():
                     station = Station()
                     station.service = service
                     station.station_id = key
-                    station.name = value
+                    station.name_ru = value
                     station.save()
 
         except Exception as ex:

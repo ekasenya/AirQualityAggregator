@@ -1,50 +1,9 @@
 import http.client
-from http import HTTPStatus
-import ssl
-
 import logging
+import ssl
+from http import HTTPStatus
+
 from main.models import AirQService
-
-
-SUBSTANCE_DICT = \
-    {
-        "NO2": "Диоксид азота",
-        "NO": "Оксид азота",
-        "CO": "Оксид углерода",
-        "O3": "Озон приземный",
-        "PM10": "Взвешенные частицы PM10",
-        "PM2,5": "Взвешенные частицы PM2.5",
-        "SO2": "Серы диоксид",
-        "H2S": "Сероводород",
-        "CH4": "Метан",
-        "C8H8": "Стирол",
-        "C6H6": "Бензол",
-        "C10H8": "Нафталин",
-        "CH2O": "Формальдегид",
-        "C6H5OH": "Фенол",
-        "C7H8": "Толуол",
-        "NH3": "Аммиак"
-    }
-
-PDK_DICT = \
-    {
-        "NO2": "0.2",
-        "NO": "0.4",
-        "CO": "5",
-        "O3": "0.16",
-        "PM10": "0.3",
-        "PM2,5": "0.16",
-        "SO2": "0.5",
-        "H2S": "0.15",
-        "CH4": "50",
-        "C8H8": "0",
-        "C6H6": "0",
-        "C10H8": "0",
-        "CH2O": "0",
-        "C6H5OH": "0",
-        "C7H8": "0",
-        "NH3": "0.2"
-    }
 
 
 class AirQualityRequestError(Exception):
@@ -57,9 +16,7 @@ class CustomAirQualityService:
     NO_NAME = 'No name'
 
     URL = ""
-    STATIONS_URN = ""
-    DATA_URN = ""
-
+    
     NORMALIZE_RATE = 1
 
     def get_service_id(self):

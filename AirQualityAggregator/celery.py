@@ -1,7 +1,10 @@
 from __future__ import absolute_import, unicode_literals
+
 import os
+
 from celery import Celery
 from django.conf import settings
+
 from main.tasks import pull_data
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'AirQualityAggregator.settings.dev')

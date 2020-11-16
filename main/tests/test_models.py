@@ -1,11 +1,9 @@
-from datetime import datetime
-
 from django.test import TestCase
 
 from main.models import UserStations
+from main.tests.fixtures import UserStationsFactory, StationFactory, AirQServiceFactory
 from user.models import UserProfile
 from user.tests.fixtures import UserFactory
-from main.tests.fixtures import UserStationsFactory, StationFactory, AirQServiceFactory
 
 
 class UserStationsTests(TestCase):
