@@ -9,6 +9,13 @@
         - POSTGRES_DB=air_quality
         - POSTGRES_USER=django
         - POSTGRES_PASSWORD=django
+    redis:
+      image: redis
+      restart: always
+      container_name: 'demo_app_redis'
+      command: redis-server
+      ports:
+        - '6379:6379'
     web:
       build: .
       command: /code/AirQualityAggregator/entrypoint.sh
@@ -20,3 +27,14 @@
         - db
       links:
         - db:db
+    celery:
+      build: .
+      container_name: 'air_app_celery'
+      command: celery -A core worker -B
+      volumes:
+        - .:/code/AirQualityAggregator
+      links:
+        - redis
+      depends_on:
+        - web
+        - redis
