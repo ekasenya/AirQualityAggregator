@@ -10,14 +10,14 @@ class AirQServiceFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = AirQService
 
-    name = factory.Sequence(lambda n: "service%s" % n)
+    name_ru = factory.Sequence(lambda n: "service%s" % n)
 
 
 class StationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Station
 
-    name = factory.Sequence(lambda n: "station%s" % n)
+    name_ru = factory.Sequence(lambda n: "station%s" % n)
     service = factory.SubFactory(AirQServiceFactory)
 
 

@@ -2,6 +2,7 @@ from django.core.exceptions import ImproperlyConfigured
 
 from AirQualityAggregator.settings.base import *
 
+
 def get_env_value(env_variable):
     try:
         return os.environ[env_variable]
@@ -12,12 +13,14 @@ def get_env_value(env_variable):
 
 ALLOWED_HOSTS = ['*']
 
-SECRET_KEY = get_env_value("SECRET_KEY")
+#SECRET_KEY = get_env_value("SECRET_KEY")
+SECRET_KEY = '!q^vwef^38%+1a_f@icc73q6by#==)=zca)sgp)tlq&1owzox)'
+
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'air_aggr_db',
+        'NAME': 'air_quality',
         'USER': 'django',
         'PASSWORD': 'django',
         'HOST': 'db',

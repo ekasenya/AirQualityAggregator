@@ -9,7 +9,7 @@ SECRET_KEY = '!q^vwef^38%+1a_f@icc73q6by#==)=zca)sgp)tlq&1owzox)'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'air_aggr_db',
+        'NAME': 'air_quality',
         'USER': 'django',
         'PASSWORD': 'django',
         'HOST': 'localhost',
